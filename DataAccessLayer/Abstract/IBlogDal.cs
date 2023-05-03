@@ -11,11 +11,11 @@ namespace DataAccessLayer.Abstract
 	{
 		List<Blog> ListAllBlog();
 
-		void AddCategory(Blog blog);
+		void AddBlog(Blog blog);
 
-		void DeleteCategory(Blog blog);
+		void DeleteBlog(Blog blog);
 
-		void UpdateCategory(Blog blog);
+		void UpdateBlog(Blog blog);
 
 		Blog GetById(int id);
 	}
