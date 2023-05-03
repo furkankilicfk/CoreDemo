@@ -44,3 +44,15 @@ namespace DataAccessLayer.Repositories
 		}
 	}
 }
+
+//CRUD
+//CREATE-READ-UPDATE-DELETE
+//.Her bir crud operasyonuna ait bir metot tanımlanacak
+//.Metotların imzası olarak interfaceler kullanılacak
+//.Abstract üzerinde soyut ifade olarak interfaceleri tanımlar 
+//.Concrete üzerinde somut ifade olarak bu interfaceler içinde yer alan metotların içini doldur
+//.Generic --> Bütününe uygulanacak 
+//.ekleme silme güncelleme --> void t ürü kullanılacak
+//.
+//.
+//.

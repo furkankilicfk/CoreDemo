@@ -7,16 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Abstract
 {
-	public interface IBlogDal
+	public interface IBlogDal:IGenericDal<Blog>
 	{
-		List<Blog> ListAllBlog();
-
-		void AddBlog(Blog blog);
-
-		void DeleteBlog(Blog blog);
-
-		void UpdateBlog(Blog blog);
-
-		Blog GetById(int id);
+		//tanımlamış olduğum entitylerin tamamı için birer tane abstract klasörü içinde dataaccesslayer interface'i tanımlayacağım. Böylece hiçbir entity'm çıplak kalmayacak
 	}
 }
