@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,5 +20,7 @@ namespace DataAccessLayer.Abstract
 		List<T> GetListAll();
 
 		T GetById(int id);      //id'ye göre veri alacağım sileceğim --	metodun türü category olmalı
+
+		List<T> GetListAll(Expression<Func<T, bool>> filter);	//expression: bu lambda ifadesi şartlı sorgulamalarda listelemelerde kullanılır. bool çıkış değeri filter parametre adı
 	}
 }
