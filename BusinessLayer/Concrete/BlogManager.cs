@@ -14,7 +14,7 @@ namespace BusinessLayer.Concrete
         IBlogDal _blogdal;
 
         //constr metodun faydası: sadece igenericdal'a değil, bunun içinde oluşturmuş olduğum metotlara da ulaşabiliyorum 
-        public BlogManager(IBlogDal blogdal)
+        public BlogManager(IBlogDal blogdal) //dataları properyleri metotlara ulaşımı güvenleştirmek için
         {
             _blogdal = blogdal;
         }
@@ -55,3 +55,5 @@ namespace BusinessLayer.Concrete
         }
     }
 }
+
+//Partiallara url üzerinden direkt erişim var ama component üzerinden sağlanamıyor
