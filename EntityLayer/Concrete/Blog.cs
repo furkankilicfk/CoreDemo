@@ -28,6 +28,10 @@ namespace EntityLayer.Concrete
 
         public Category Category { get; set; }       //ilişki içine alınacak olan tablo türünde bir property belirttik
 
-        public List<Comment> Comment { get; set; }      //bir blogda birden fazla yorum olabilir
+		public int WriterID { get; set; }      
+
+		public Writer Writer { get; set; }
+
+		public List<Comment> Comment { get; set; }      //bir blogda birden fazla yorum olabilir
     }
 }
