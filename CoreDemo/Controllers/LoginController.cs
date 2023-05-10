@@ -13,7 +13,8 @@ namespace CoreDemo.Controllers
 {
 	public class LoginController : Controller
 	{
-		[AllowAnonymous]		//proje seviyesinde tanımlamış olduğum bütün kurallardan muaf ol
+		[AllowAnonymous]
+		[HttpGet]		//proje seviyesinde tanımlamış olduğum bütün kurallardan muaf ol
 		public IActionResult Index()
 		{
 			return View();

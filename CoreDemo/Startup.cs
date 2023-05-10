@@ -1,19 +1,16 @@
-using CoreDemo.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace CoreDemo
@@ -30,35 +27,36 @@ namespace CoreDemo
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(
-					Configuration.GetConnectionString("DefaultConnection")));
-			services.AddDatabaseDeveloperPageExceptionFilter();
-
-			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-				.AddEntityFrameworkStores<ApplicationDbContext>();
 			services.AddControllersWithViews();
 
-			//services.AddSession();
-			
-			//Proje seviyesinde authorize
+			services.AddSession();
 
-			services.AddMvc(config=>
+			services.AddMvc(config =>
 			{
-				var policy = new AuthorizationPolicyBuilder()		//authanticate iþlemini zorunlu kýlan metod
-							.RequireAuthenticatedUser()				//kullanýcýnýn sisteme login olmasý
-							.Build();
-				config.Filters.Add(new AuthorizeFilter(policy));		//policy'den gelen deðeri filtrele
+				var policy = new AuthorizationPolicyBuilder()
+				.RequireAuthenticatedUser()
+				.Build();
+				config.Filters.Add(new AuthorizeFilter(policy));
 			});
 
-			//returnUrl sayfa dizini
 			services.AddMvc();
 			services.AddAuthentication(
-				CookieAuthenticationDefaults.AuthenticationScheme
-				).AddCookie(x =>
+				CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(x =>
 				{
 					x.LoginPath = "/Login/Index/";
-				});
+				}
+				);
+
+			services.ConfigureApplicationCookie(options =>
+			{
+				options.Cookie.HttpOnly = true;
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+				options.LoginPath = "/Login/Index/";
+				options.SlidingExpiration = true;
+			});
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +65,6 @@ namespace CoreDemo
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseMigrationsEndPoint();
 			}
 			else
 			{
@@ -76,18 +73,17 @@ namespace CoreDemo
 				app.UseHsts();
 			}
 
-			app.UseStatusCodePagesWithReExecute("/ErrorPage/Error1/", "?code={0}");		//hata kýsmýnda hangi sayfaya yönlendirecek, query almasý gerekiyor(sorgu)-sorgu kýsmýnda htk almasý gerekiyorhata kodu için kod deðeri-null'da dönebilir
+			app.UseStatusCodePagesWithReExecute("/ErrorPage/Error1", "?code={0}");
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
 			app.UseAuthentication();
 
-			//app.UseSession();
+			app.UseSession();
 
 			app.UseRouting();
 
-			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
@@ -95,7 +91,6 @@ namespace CoreDemo
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
-				endpoints.MapRazorPages();
 			});
 		}
 	}
