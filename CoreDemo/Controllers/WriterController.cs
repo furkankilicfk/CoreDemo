@@ -5,7 +5,7 @@ namespace CoreDemo.Controllers
 {
 	public class WriterController : Controller
 	{
-		[AllowAnonymous]
+		//[AllowAnonymous]
 		public IActionResult Index()
 		{
 			return View();
