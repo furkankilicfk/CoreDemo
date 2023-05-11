@@ -35,20 +35,20 @@ namespace BusinessLayer.Concrete
 
 		//	//genericrepository'yi kullanıyor aynı zamanda ICatDal'ı kullanıyor.IcatDal'daIGenericDal'ı kullanıyor. Böylece tanımlamış olduğum generic yapıların hepsini kullanmış oluyorum
 		//      }		//EntityFramework'e çok ciddi bir bağımlılığım var. Interface'ler üzerinden contr metot oluşturacağım. dep inj'e daha uygun
-		public void CategoryAdd(Category category)
-		{
-			_categoryDal.Insert(category);
-		}
+		//public void CategoryAdd(Category category)
+		//{
+		//	_categoryDal.Insert(category);
+		//}
 
-		public void CategoryDelete(Category category)
-		{
-			_categoryDal.Delete(category);
-		}
+		//public void CategoryDelete(Category category)
+		//{
+		//	_categoryDal.Delete(category);
+		//}
 
-		public void CategoryUpdate(Category category)
-		{
-			_categoryDal.Update(category); ;
-		}
+		//public void CategoryUpdate(Category category)
+		//{
+		//	_categoryDal.Update(category); 
+		//}
 
 		public Category GetById(int id)
 		{
@@ -58,6 +58,21 @@ namespace BusinessLayer.Concrete
 		public List<Category> GetList()
 		{
 			return _categoryDal.GetListAll();
+		}
+
+		public void TAdd(Category t)
+		{
+			_categoryDal.Insert(t);
+		}
+
+		public void TDelete(Category t)
+		{
+			_categoryDal.Delete(t);
+		}
+
+		public void TUpdate(Category t)
+		{
+			_categoryDal.Update(t);
 		}
 	}
 }
