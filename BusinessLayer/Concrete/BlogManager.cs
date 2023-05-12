@@ -26,7 +26,7 @@ namespace BusinessLayer.Concrete
 
 		public Blog GetById(int id)
         {
-            throw new NotImplementedException();
+             throw new NotImplementedException();
         }
 
         public List<Blog> GetBlogByID(int id) 
@@ -51,7 +51,7 @@ namespace BusinessLayer.Concrete
 
 		public void TAdd(Blog t)
 		{
-			throw new NotImplementedException();
+			_blogdal.Insert(t);
 		}
 
 		public void TUpdate(Blog t)
