@@ -7,6 +7,9 @@ using EntityLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using FluentValidation.Results;
 using System;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CoreDemo.Controllers
 {
@@ -29,13 +32,21 @@ namespace CoreDemo.Controllers
 
         public IActionResult BlogListByWriter()
         {
-            var values = bm.GetBlogListByWriter(1);
+            var values = bm.GetListWithCategoryByWriterBm(1);
             return View(values);
         }
 
         [HttpGet]
         public IActionResult BlogAdd()
-        {
+        { 
+            CategoryManager cm = new CategoryManager(new EfCategoryRepository());
+            List<SelectListItem> categoryvalues = (from x in cm.GetList()
+                                                   select new SelectListItem
+                                                   {
+                                                    Text = x.CategoryName,
+                                                    Value = x.CategoryID.ToString()
+                                                   }).ToList();
+            ViewBag.cv = categoryvalues;  //gelen değeri dropdowna taşıyacağım
             return View();
         }
 
@@ -62,5 +73,24 @@ namespace CoreDemo.Controllers
             }
             return View();
         }
-    } 
+        public IActionResult DeleteBlog(int id)
+        {
+            var blogvalue = bm.TGetById(id);
+            bm.TDelete(blogvalue);
+            return RedirectToAction("BlogListByWriter");
+        }
+
+        [HttpGet]
+        public IActionResult EditBlog(int id)         //sayfa yüklendiği zaman sen bana verileri getir
+        {
+            var blogvalue = bm.TGetById(id);
+            return View(blogvalue);
+        }
+
+        [HttpPost]
+        public IActionResult EditBlog(Blog p)
+        {
+            return RedirectToAction("BlogListByWriter");
+        }
+    }  
 }

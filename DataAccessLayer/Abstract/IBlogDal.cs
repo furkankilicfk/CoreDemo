@@ -15,5 +15,7 @@ namespace DataAccessLayer.Abstract
 		//genericte oluşturduğum metotlar haricinde bloga özel ekstra metod oluşturacağım
 
 		List<Blog> GetListWithCategory();
-	}
+
+        List<Blog> GetListWithCategoryByWriter(int id);
+    }
 }
