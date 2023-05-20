@@ -23,8 +23,8 @@
     @Html.TextBoxFor(x=>x.BlogThumbnail, new { @class="form-control" })
 
     <br/>
-    @Html.Label("Blog Başlığı")
-    @Html.TextBoxFor(x=>x.CategoryID, new { @class="form-control" })
+    @Html.Label("Blog Kategori")
+    @Html.DropDownListFor(x=>x.CategoryID,(List<SelectListItem>)ViewBag.cv, new {@class = "form-control"})
 
     <br/>
     @Html.Label("Blog Başlığı")

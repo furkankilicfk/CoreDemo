@@ -10,6 +10,9 @@ using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
+using DataAccessLayer.Abstract;
+using BusinessLayer.Concrete;
 
 namespace CoreDemo.Controllers
 {
@@ -17,6 +20,7 @@ namespace CoreDemo.Controllers
     public class BlogController : Controller
     {
         BlogManager bm = new BlogManager(new EfBlogRepository());
+        CategoryManager cm = new CategoryManager(new EfCategoryRepository());
         public IActionResult Index()
         {
             var values = bm.GetBlogListWithCategory();
@@ -39,7 +43,7 @@ namespace CoreDemo.Controllers
         [HttpGet]
         public IActionResult BlogAdd()
         { 
-            CategoryManager cm = new CategoryManager(new EfCategoryRepository());
+            
             List<SelectListItem> categoryvalues = (from x in cm.GetList()
                                                    select new SelectListItem
                                                    {
@@ -84,13 +88,28 @@ namespace CoreDemo.Controllers
         public IActionResult EditBlog(int id)         //sayfa yüklendiği zaman sen bana verileri getir
         {
             var blogvalue = bm.TGetById(id);
+            List<SelectListItem> categoryvalues = (from x in cm.GetList()
+                                                   select new SelectListItem
+                                                   {
+                                                       Text = x.CategoryName,
+                                                       Value = x.CategoryID.ToString()
+                                                   }).ToList();
+            ViewBag.cv = categoryvalues;  //gelen değeri dropdowna taşıyacağım
             return View(blogvalue);
         }
 
         [HttpPost]
         public IActionResult EditBlog(Blog p)
         {
-            return RedirectToAction("BlogListByWriter");
+
+            var blogToUpdate = bm.TGetById(p.BlogID);
+            p.WriterID = blogToUpdate.WriterID;
+            p.BlogCreateDate = blogToUpdate.BlogCreateDate;
+            p.BlogStatus = blogToUpdate.BlogStatus;
+
+            bm.TUpdate(p);
+            return RedirectToAction("BlogListByWriter", "Blog");
+            //return RedirectToAction("BlogListByWriter");
         }
     }  
 }
