@@ -13,14 +13,16 @@ using System.Linq;
 using System.Reflection.Metadata;
 using DataAccessLayer.Abstract;
 using BusinessLayer.Concrete;
+using DataAccessLayer.Concrete;
 
 namespace CoreDemo.Controllers
 {
-    [AllowAnonymous]
+    
     public class BlogController : Controller
     {
         BlogManager bm = new BlogManager(new EfBlogRepository());
         CategoryManager cm = new CategoryManager(new EfCategoryRepository());
+        Context c = new Context();
         public IActionResult Index()
         {
             var values = bm.GetBlogListWithCategory();
@@ -36,7 +38,10 @@ namespace CoreDemo.Controllers
 
         public IActionResult BlogListByWriter()
         {
-            var values = bm.GetListWithCategoryByWriterBm(1);
+           
+            var usermail = User.Identity.Name; //aktif kullanıcının name değerini getirir.
+            var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(y => y.WriterID).FirstOrDefault();
+            var values = bm.GetListWithCategoryByWriterBm(writerID);
             return View(values);
         }
 
@@ -57,13 +62,16 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult BlogAdd(Blog p) 
         {
+           
+            var usermail = User.Identity.Name; //aktif kullanıcının name değerini getirir.
+            var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(y => y.WriterID).FirstOrDefault();
             BlogValidator bv = new BlogValidator();
             ValidationResult results = bv.Validate(p); //writervalidator içindekileri (validate) kontrol edeceksin p den gelen değerler   
             if (results.IsValid)
             {
                 p.BlogStatus = true;
                 //p.BlogCreateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-                p.WriterID = 1;
+                p.WriterID = writerID;
                 bm.TAdd(p);
 
                 return RedirectToAction("BlogListByWriter", "Blog");//index aksiyonuna git. o nerde blogcontrollerın
@@ -101,15 +109,15 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult EditBlog(Blog p)
         {
-
-            var blogToUpdate = bm.TGetById(p.BlogID);
-            p.WriterID = blogToUpdate.WriterID;
-            p.BlogCreateDate = blogToUpdate.BlogCreateDate;
-            p.BlogStatus = blogToUpdate.BlogStatus;
-
+            var usermail = User.Identity.Name; //aktif kullanıcının name değerini getirir.
+            var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(y => y.WriterID).FirstOrDefault();
+            // var blogToUpdate = bm.TGetById(p.BlogID);
+            p.WriterID = writerID;
+            //p.BlogCreateDate = c //DateTime.Parse(DateTime.Now.ToShortDateString());
+            p.BlogStatus = true;
             bm.TUpdate(p);
-            return RedirectToAction("BlogListByWriter", "Blog");
-            //return RedirectToAction("BlogListByWriter");
+            //return RedirectToAction("BlogListByWriter", "Blog");
+            return RedirectToAction("BlogListByWriter");
         }
     }  
 }

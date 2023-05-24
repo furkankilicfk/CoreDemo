@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using CoreDemo.Models;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace CoreDemo.Controllers
 {
@@ -16,8 +18,14 @@ namespace CoreDemo.Controllers
 		WriterManager wm = new WriterManager(new EfWriterRepository());
 
 		//[AllowAnonymous]
+		[Authorize]
 		public IActionResult Index()
 		{
+			var usermail = User.Identity.Name; //aktif kullanıcının name değerini getirir.
+			ViewBag.v = usermail;
+			Context c = new Context();
+			var writerName = c.Writers.Where(x=>x.WriterMail==usermail).Select(y=>y.WriterName).FirstOrDefault();
+			ViewBag.v2 = writerName;
 			return View();
 		}
 
@@ -49,14 +57,18 @@ namespace CoreDemo.Controllers
 			return PartialView();
 		}
 
-        [AllowAnonymous]
+       
 		[HttpGet]
 		public IActionResult WriterEditProfile()
 		{
-			var writervalues = wm.TGetById(1);
+			Context c = new Context();
+            var usermail = User.Identity.Name; //aktif kullanıcının name değerini getirir.
+            var writerID = c.Writers.Where(x => x.WriterMail == usermail).Select(y => y.WriterID).FirstOrDefault();
+            var values = wm.GetWriterById(writerID); //sisteme authantice olmuş kullanıcının id'si
+            var writervalues = wm.TGetById(writerID);
 			return View(writervalues);
 		}
-		[AllowAnonymous]
+		
         [HttpPost]
         public IActionResult WriterEditProfile(Writer p)
         {
