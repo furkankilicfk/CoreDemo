@@ -21,5 +21,8 @@ namespace EntityLayer.Concrete
         public bool WriterStatus { get; set; }
 
 		public List<Blog> Blogs { get; set; }        //bir yazarın birden fazla blogu olabilir
-	}
+
+        public virtual ICollection<Message2> WriterSender { get; set; }  //entitylerle oluşturduğumuz crosstable entitysi ile bire çok ilişki kurmak //writerın birden fazla mesajı var
+        public virtual ICollection<Message2> WriterReceiver { get; set; }   //witerın birden fazla mesajı var -- writer üzerinden alıcıları sorguluyorum
+    }
 }
