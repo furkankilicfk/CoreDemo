@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Yazar Ajax İşlemleri</h1>
+<br/>
+<button type="button" id="btngetlist" class="btn btn-outline-primary">Yazar Listesi</button> @*vereceğim id ismi aşağıda scriptin içinde çağıracağım hedef noktam olacak *@
+<button type="button" id="btngetbyid" class="btn btn-outline-success">Yazar Getir</button> @*vereceğim id ismi aşağıda scriptin içinde çağıracağım hedef noktam olacak *@
+<br/><br/>
+<div id="writerlist">
+    Buraya yazarlar gelecek @*yazarları getirme işlemindeki tabloyu script üzerinden getireceğim*@
+</div>
+<br/>
+<div id="writerget">
+    Buraya 1 yazar gelecek
+</div>
+<br/>
+<div>
+    <input type="text" id="writerid" placeholder="Yazar ID Değerini Girin" class="form-control"/>
+</div>
+
+@*bu scriptin çalışması için bu scripte bağlı olan layouta ekleyeceğim bir komut var*@
+@*adminlayouttaki await ile rendersectionasync te ismi belirttik*@
+
+@*@section scripts
+{
+    <script>
+        $("#btngetlist").click(function () {
+            $.ajax({
+               //buraya ajax'a ait parametreleri göndereceğim
+               contentType:"application/json",   //içeriğin türü
+               dataType: "json",
+               type:"Get",      //burası get olduğu zaman çalışacak
+               url:"/Admin/Writer/WriterList/",
+               success: function.(func) {
+                   console.log(func);
+               }
+            });
+        });
+    </script>*@
+    @section scripts{
+    <script>
+        $("#btngetlist").click(function () {
+            $.ajax({
+                contentType: "application/json",
+                dataType: "json",
+                type: "Get",
+                url: "/Admin/Writer/WriterList/",
+                success: function (func) {
+                    let w = jQuery.parseJSON(func);
+                    console.log(w);
+                    let tablehtml = "<div class='ibox-title'><h5>Yazar Listesi</h5></div><div class='ibox-content'><table class='table'><thead><tr><th> Yazar ID</th> <th> Yazar Adı </th></tr></thead>";
+                    $.each(w, (index, value) => {
+                        tablehtml += `<tr><td>${value.Id}</td> <td>${value.Name}</td></tr>`  //verileri listeleme
+                    });
+                    tablehtml += "</table></div>";
+                    $("#writerlist").html(tablehtml);  //html formatında yukarıdaki div içinde table html'i getir
+                }
+            });
+        });
+        //each her bir veri
+
+        $("#btngetbyid").click(x=> {
+            let id =$("#writerid").val();  //buradan aldığım değeri oku
+            $.ajax({
+                contentType: "application/json",
+                dataType: "json",
+                type: "get",
+                url: "/Admin/Writer/GetByWriterID/",
+                data: { writerid: id },
+                success: funvtion (func) {
+                    let w = jQuery.parseJSON(func);
+                    console.log(w)
+                }
+            })
+        })
+     </script>
+
+}
