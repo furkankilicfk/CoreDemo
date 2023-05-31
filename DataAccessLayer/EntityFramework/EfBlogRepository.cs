@@ -20,7 +20,7 @@ namespace DataAccessLayer.EntityFramework
 			{
 				return c.Blogs.Include(x=> x.Category).ToList();	//hangi entity include edilecek?
 			}
-		}
+		}          //bloga özel olarak kullanacağım metotların içini burada tanımlayacağım
 
         public List<Blog> GetListWithCategoryByWriter(int id)
         {
