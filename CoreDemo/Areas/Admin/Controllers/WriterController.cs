@@ -16,7 +16,7 @@ namespace CoreDemo.Areas.Admin.Controllers
 
         public IActionResult WriterList()
         {   //yazar listesi için aşağıdaki listeyi değişkene atayıp bunu da Json türüne convert etmem gerekiyor
-            var jsonwriters = JsonConvert.SerializeObject(writers);  //dönüştürmek istediğim şey writers nesnesinden gelen değeri. writers aşağıdakileri tutuyor.
+            var jsonwriters = JsonConvert.SerializeObject(writers);  //dönüştürmek istediğim şey writers nesnesinden gelen değer. writers aşağıdakileri tutuyor.
             return Json(jsonwriters);
         }
 
@@ -26,6 +26,29 @@ namespace CoreDemo.Areas.Admin.Controllers
             var findwriter = writers.FirstOrDefault(x=> x.Id == writerid);
             var jsonWriters = JsonConvert.SerializeObject(findwriter);
             return Json(jsonWriters);
+        }
+
+        [HttpPost]
+        public IActionResult AddWriter(WriterClass w)
+        {
+            writers.Add(w);
+            var jsonwriters = JsonConvert.SerializeObject(w);
+            return Json(jsonwriters);
+        }
+
+        public IActionResult DeleteWriter(int id)
+        {
+            var writer = writers.FirstOrDefault(x => x.Id == id);
+            writers.Remove(writer);
+            return Json(writer);
+        }
+
+        public IActionResult UpdateWriter(WriterClass w)
+        {
+            var writer = writers.FirstOrDefault(x => x.Id == w.Id); //dışarıdan gönderdiğim id'ye eşi olmalı
+            writer.Name = w.Name;   //bulduğumuz yazar name, w dan gelen yazar name ile atama gerçekleşsin
+            var jsonWriter = JsonConvert.SerializeObject(writer);
+            return Json(jsonWriter);
         }
 
         public static List<WriterClass> writers = new List<WriterClass>
