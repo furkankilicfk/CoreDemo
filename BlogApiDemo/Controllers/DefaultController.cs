@@ -18,9 +18,62 @@ namespace BlogApiDemo.Controllers
         }
 
         [HttpPost]
-        public IActionResult EmployeeAdd()
+        public IActionResult EmployeeAdd(Employee employee)
         {
+            using var c = new Context();
+            c.Add(employee);
+            c.SaveChanges();
             return Ok();
         }
+
+        [HttpGet("{id}")]
+        public IActionResult EmployeeGet(int id)
+        {
+            using var c = new Context();
+            var employee = c.Employees.Find(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(employee);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult EmployeeDelete(int id)
+        {
+            using var c = new Context();
+            var employee =c.Employees.Find(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                c.Remove(employee);
+                c.SaveChanges();
+                return Ok();
+            }
+        }
+
+        [HttpPut]
+        public IActionResult EmployeeUpdate(Employee employee)
+        {
+            using var c = new Context();
+            var emp = c.Employees.Find(employee.ID);
+            if (emp == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                emp.Name = employee.Name;  //güncellenecek olan satırdaki değere karşılık parametreden gelen değeri al
+                c.Update(emp);
+                c.SaveChanges();
+                return Ok();
+            }
+        }       //Oluşturmuş olduğum api üzerindeki tabloma bir presentation katmanı üzerinden ulaşmak istiyorum ve bu katman üzerinden ulaşmış olduğum tabloda crud işlemleri gerçekleştirmek istiyorum.
     }
 }
