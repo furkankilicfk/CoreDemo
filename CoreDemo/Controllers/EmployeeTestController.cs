@@ -9,7 +9,7 @@ namespace CoreDemo.Controllers
 {
     public class EmployeeTestController : Controller
     {
-        public async Task<IActionResult>  Index()
+        public async Task<IActionResult> Index()
         {
             //göndermiş olduğum api adresine istekte bulunacağım ve bu isteği karşılayacak olan değerleri listelemeye çalışacağım.
 
@@ -30,20 +30,60 @@ namespace CoreDemo.Controllers
         {
             var httpClient = new HttpClient();
             var jsonEmployee = JsonConvert.SerializeObject(p);  //içeriği serialize ettim, jsona dönüştürdüm
-            StringContent content = new StringContent(jsonEmployee,Encoding.UTF8,"application/json");
+            StringContent content = new StringContent(jsonEmployee, Encoding.UTF8, "application/json");
             var responseMessage = await httpClient.PostAsync("https://localhost:44341/api/Default", content); //contentten gelen değerle gidecek
-            if(responseMessage.IsSuccessStatusCode) 
+            if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
             return View(p);
         }
-    }
 
-    public class Class1 
-    {       //employee u karşılayacağı için birebir aynı formatta olmalı
-        public int Id { get; set; }
-        public string Name { get; set; }
+        [HttpGet]
+        public async Task<IActionResult> EditEmployee(int id)
+        {
+            var httpClient = new HttpClient();
+            var responseMessage = await httpClient.GetAsync("https://localhost:44341/api/Default" + id);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var jsonEmployee = await responseMessage.Content.ReadAsStringAsync();
+                var values = JsonConvert.DeserializeObject<Class1>(jsonEmployee);
+                return View(values);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditEmployee(Class1 p)
+        {
+            var httpClient = new HttpClient();
+            var jsonEmployee = JsonConvert.SerializeObject(p);
+            var content = new StringContent(jsonEmployee, Encoding.UTF8, "application/json");
+            var responseMessage = await httpClient.PutAsync("https://localhost:44341/api/Default", content);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(p);
+        }
+
+        public async Task<IActionResult> DeleteEmployee(int id)
+        {
+            var httpClient = new HttpClient();
+            var responseMessage = await httpClient.DeleteAsync("https://localhost:44341/api/Default" + id);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
+
+        }
+
+        public class Class1
+        {       //employee u karşılayacağı için birebir aynı formatta olmalı
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
     }
 }
 

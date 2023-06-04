@@ -1,0 +1,20 @@
+﻿@using CoreDemo.Controllers;
+@using static CoreDemo.Controllers.EmployeeTestController;
+@model Class1
+@{
+    ViewData["Title"] = "EditEmployee";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Api ile Personel Güncelleme Sayfası</h1>
+<br/>
+<form method="post">
+    <label>ID</label>
+    @Html.TextBoxFor(x=>x.Id, new {@class = "form-control"})
+    <br/>
+     <label>Name</label>
+    @Html.TextBoxFor(x=>x.Name, new {@class = "form-control"})    
+    <br/>
+    <button type="submit" class="btn btn-success">Güncelle</button>
+</form>
+
