@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using DataAccessLayer.Abstract;
-using BusinessLayer.Concrete;
+//using BusinessLayer.Concrete;
 using DataAccessLayer.Concrete;
 
 namespace CoreDemo.Controllers
@@ -23,12 +23,15 @@ namespace CoreDemo.Controllers
         BlogManager bm = new BlogManager(new EfBlogRepository());
         CategoryManager cm = new CategoryManager(new EfCategoryRepository());
         Context c = new Context();
+
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var values = bm.GetBlogListWithCategory();
             return View(values);
         }
 
+        [AllowAnonymous]
         public IActionResult BlogReadAll(int id)
         {
             ViewBag.i = id;

@@ -43,7 +43,7 @@ namespace CoreDemo.Controllers
         public async Task<IActionResult> EditEmployee(int id)
         {
             var httpClient = new HttpClient();
-            var responseMessage = await httpClient.GetAsync("https://localhost:44341/api/Default" + id);
+            var responseMessage = await httpClient.GetAsync("https://localhost:44341/api/Default/" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonEmployee = await responseMessage.Content.ReadAsStringAsync();
@@ -59,7 +59,7 @@ namespace CoreDemo.Controllers
             var httpClient = new HttpClient();
             var jsonEmployee = JsonConvert.SerializeObject(p);
             var content = new StringContent(jsonEmployee, Encoding.UTF8, "application/json");
-            var responseMessage = await httpClient.PutAsync("https://localhost:44341/api/Default", content);
+            var responseMessage = await httpClient.PutAsync("https://localhost:44341/api/Default/", content);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");

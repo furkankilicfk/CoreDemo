@@ -1,10 +1,12 @@
 ﻿using BusinessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo.Controllers
 {
+	[AllowAnonymous]
 	public class NewsLetterController : Controller
 	{
 		NewsLetterManager nm = new NewsLetterManager(new EfNewsLetterRepository());
@@ -17,7 +19,7 @@ namespace CoreDemo.Controllers
 		}
 
 		[HttpPost]
-		public PartialViewResult SubscribeMail(NewsLetter p)        //entitylayerconcrete
+		public IActionResult SubscribeMail(NewsLetter p)        //entitylayerconcrete
 		{   //mail bültenine abone olma işlemini buradan gerçekleştireceğiz
 
 			p.MailStatus = true;
